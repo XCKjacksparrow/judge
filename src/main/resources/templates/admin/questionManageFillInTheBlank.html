@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+        <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+            <div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="#">题库管理</a></li>
+                    <li role="presentation"><a href="/teacherManage">教师管理</a></li>
+                    <li role="presentation"><a href="/studentManage">学生管理</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content col-md-10">
+            <div class="row">
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation"><a href="/success/admin">选择题</a></li>
+                            <li role="presentation"><a href="/questionManageTrueOrFalse">判断题</a></li>
+                            <li role="presentation" class="active"><a href="#">填空题</a></li>
+                            <li role="presentation"><a href="/questionManageReadProgram">程序阅读题</a></li>
+                            <li role="presentation"><a href="/questionManageProgramFillInTheBlank">程序填空题</a></li>
+                            <li role="presentation"><a href="/questionManageCorrectMistake">程序改错题</a></li>
+                            <li role="presentation"><a href="/questionManagePrograming">程序编写题</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-10" style="margin-top: 20px;">
+                    <button class="btn btn-default" id="add">新增</button>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Content</th>
+                            <th>Answer</th>
+                            <th>Option</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="question : ${allFillInTheBlank}">
+                            <th scope="row" th:text="${question.id}">1</th>
+                            <td th:utext="${question.content}" th:size="5">Mark</td>
+                            <td th:text="${question.answer}">Otto</td>
+                            <td><button th:attr="deleteId=${question.id}" class="btn btn-danger">delete</button> <button th:attr="modifyId=${question.id}" class="btn btn-success">modify</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                确定删除吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增-->
+<div class="modal fade bs-example-modal-add" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirong">内容</label>
+                        <textArea id="neirong" style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="daan">答案</label>
+                        <input type="text" id="daan">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="addSureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改 -->
+
+<div class="modal fade bs-example-modal-modify" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirongModify">内容</label>
+                        <textArea id="neirongModify" style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="daanModify">答案</label>
+                        <input type="text" id="daanModify">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="modifySureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var currentId;
+    //删除
+    $("tr button.btn-danger").click(function (e) {
+        // console.log(e.target.id);
+        $(".bs-example-modal-sm").modal();
+        currentId = $(e.target).attr("deleteId");
+    });
+    $("#sureBtn").click(function () {
+        $.ajax({
+            url:"/deleteQuestionById",
+            data:{
+                id:currentId,
+            },
+            success:function (result) {
+                location.reload();
+            }
+        })
+    });
+    //    新增
+    $("#add").click(function () {
+        $(".bs-example-modal-add").modal();
+    });
+    $("#addSureBtn").click(function () {
+        $.ajax({
+            url:"/addFillInTheBlank",
+            method:"post",
+            data:{
+                neirong : $("#neirong").val(),
+                daan : $("#daan").val(),
+            },
+            success:function (result) {
+                alert("添加成功");
+                location.reload();
+            }
+        })
+    });
+
+    //修改
+    $("tr button.btn-success").click(function (e) {
+        currentId = $(e.target).attr("modifyId");
+        var row = e.target.parentNode.parentNode;
+        $("#neirongModify").val(row.childNodes[3].innerText);
+        $("#daanModify").val(row.childNodes[5].innerText);
+        $(".bs-example-modal-modify").modal();
+        $("#modifySureBtn").click(function () {
+            $.ajax({
+                url:"/modifyFillInTheBlank",
+                method: "post",
+                data:{
+                    id : currentId,
+                    neirong : $("#neirongModify").val(),
+                    daan : $("#daanModify").val(),
+                },
+                success:function (result) {
+                    alert(result);
+                    location.reload();
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

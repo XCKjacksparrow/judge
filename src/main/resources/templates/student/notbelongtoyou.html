@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+    <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+        <div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="#">考试作答</a></li>
+                <li role="presentation"><a href="/grade">成绩查询</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-10">
+        <h3>这场考试不包含你！</h3><a href="/success/student" class="btn btn-default">返回</a>
+    </div>
+</body>
+</html>

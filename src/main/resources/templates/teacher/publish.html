@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+    <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+        <div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="/success/teacher">考试管理</a></li>
+                <li role="presentation"><a href="#">成绩查询</a></li>
+                <li role="presentation"><a href="#">考试分析</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-10">
+        <table class="table">
+            <h3 class="text-info">选择题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allSingleChoice}" id="allSingleChoice">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">判断题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allTrueOrFalse}" id="allTrueOrFalse">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">填空题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allFillInTheBlank}" id="allFillInTheBlank">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">程序阅读题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allReadProgram}" id="allReadProgram">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">程序填空题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allProgramFillInTheBlank}" id="allProgramFillInTheBlank">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">程序改错题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+                <tr th:each="question : ${allCorrectMistake}" id="allCorrectMistake">
+                    <td th:text="${question.id}"></td>
+                    <td th:utext="${question.content}"></td>
+                    <td>
+                        <button th:attr="selectId=${question.id}" class="btn btn-success">选择</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <h3 class="text-info">编程题</h3>
+            <thead>
+                <th>#</th>
+                <th>内容</th>
+                <th>选择</th>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${allPrograming}" id="allPrograming">
+                <td th:text="${question.id}">1</td>
+                <td th:utext="${question.content}">1</td>
+                <td>
+                    <button th:attr="selectId=${question.id}"class="btn btn-success">选择</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <div id="selectedId">
+            <h2>已选题目：</h2>
+            <h3 class="text-info">选择题 : </h3>
+            <h3 class="text-info">判断题 : </h3>
+            <h3 class="text-info">填空题 : </h3>
+            <h3 class="text-info">程序阅读题 : </h3>
+            <h3 class="text-info">程序填空题 : </h3>
+            <h3 class="text-info">程序改错 : </h3>
+            <h3 class="text-info">编程题 : </h3>
+        </div>
+        <hr>
+        <button id="addBtn" class="btn btn-default">提交</button>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label for="date">开始时间：</label><br>
+                <input type="date" id="date" value="2020-01-01">
+                <input type="time" id="datetime" value="14:30:00">
+                <br>
+                <label for="dateEnd" style="margin-top: 10px;">结束时间：</label><br>
+                <input type="date" id="dateEnd" value="2020-01-01">
+                <input type="time" id="datetimeEnd" value="14:30:00">
+                <br>
+                <label for="date" style="margin-top: 10px;">考试名称：</label>
+                <input type="text" id="quizName" placeholder="2020第一场考试">
+                <br style="margin-top: 10px">是否启用多核阅卷？
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> 是
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 否
+                </label>
+
+                <br style="margin-top: 10px">考试类型
+                <label class="radio-inline">
+                    <input id="public" type="radio" name="quiztype" value="public" checked> public
+                </label>
+                <label class="radio-inline">
+                    <input id="private" type="radio" name="quiztype" value="private"> private
+                </label><br>
+                <div id="placeholder">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <h4>确认提交吗?</h4>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    // 提交 前检测题目数量是否无误
+    $("#addBtn").click(function () {
+        if (allSingleChoiceId.length < 5){
+            alert("选择题为5题！");return;
+        }else if (allTrueOrFalseId.length < 5){
+            alert("判断题为5题！");return;
+        }else if (allFillInTheBlankId.length < 5){
+            alert("填空题为5题！");return;
+        }else if (allReadProgramId.length < 2){
+            alert("程序阅读题为2题！");return;
+        }else if (allProgramFillInTheBlankId.length < 2){
+            alert("程序填空题为2题！");return;
+        }else if (allCorrectMistakeId.length < 1){
+            alert("程序改错题为1题！");return;
+        }else if (allProgramingId.length < 2){
+            alert("编程题为2题！");return;
+        }else {
+            $(".bs-example-modal-sm").modal();
+        }
+    });
+
+    // 点击private显示学生名单
+    $("#private").click(function () {
+        $.ajax({
+            url : "/getAllStudents",
+            method : "get",
+            success : function (result) {
+                for (var i = 0; i < result.length; i++){
+                    var div = $("<div class='checkbox'></div>");
+                    var label = $("<label></label>");
+                    var input = $("<input type='checkbox' name='stus'>").val(result[i].id);
+                    input.appendTo(label);
+                    $("<span></span>").text(result[i].name).appendTo(label);
+                    label.appendTo(div);
+                    div.appendTo($("#placeholder"));
+                }
+            }
+        });
+    });
+    // 点击public 清空
+    $("#public").click(function () {
+        $("#placeholder").empty();
+    });
+    // 正式提交后台    // 确认提交
+    $("#sureBtn").click(function () {
+        var allQuestionId = [];         // 所有题目id
+        var teacherName = $(".dropdown-toggle").text(); // 老师名称
+        var allStudentId = [];          // 考试的学生id
+        var quiztype = $("input[name='quiztype']:checked").val();                   // 考试类型 public private
+        if (quiztype === "private"){
+            $('input[name="stus"]:checked').each(function(){//遍历每一个名字为stus的复选框，其中选中的执行函数
+                allStudentId.push($(this).val());//将选中的值添加到数组allStudentId中
+            });
+        }
+        allQuestionId = allSingleChoiceId
+            .concat(allTrueOrFalseId)
+            .concat(allFillInTheBlankId)
+            .concat(allReadProgramId)
+            .concat(allProgramFillInTheBlankId)
+            .concat(allCorrectMistakeId)
+            .concat(allProgramingId);
+        $.ajax({
+            url:"/addQuiz",
+            data:{
+                allQuestionId : allQuestionId.toString(),
+                teacherName : teacherName,
+                date : $("#date").val()+" "+$("#datetime").val() + ":00",
+                dateEnd: $("#dateEnd").val()+" "+$("#datetimeEnd").val() + ":00",
+                quizName : $("#quizName").val(),
+                quiztype : quiztype,
+                allStudentId : allStudentId.toString(),
+            },
+            success:function (result) {
+                alert("添加成功");
+                // location.reload();
+                window.location.href = "/success/teacher";
+            }
+        })
+    });
+
+    // 选择题allSingleChoice
+    var allSingleChoiceId = [];
+    $("#allSingleChoice button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allSingleChoiceId = allSingleChoiceId.filter(function (item) {
+                return item != id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allSingleChoiceId.length === 5){
+                alert("选择题为5题！");
+            }else {
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allSingleChoiceId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(0).text("选择题 : " + allSingleChoiceId);
+    });
+
+    // 判断题allTrueOrFalse
+    var allTrueOrFalseId = [];
+    $("#allTrueOrFalse button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allTrueOrFalseId = allTrueOrFalseId.filter(function (item) {
+                return item != id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allTrueOrFalseId.length === 5){
+                alert("判断题为5题！");
+            }else{
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allTrueOrFalseId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(1).text("判断题 : " + allTrueOrFalseId);
+    });
+
+    // 填空题 allFillInTheBlank
+    var allFillInTheBlankId = [];
+    $("#allFillInTheBlank button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allFillInTheBlankId = allFillInTheBlankId.filter(function (item) {
+                return item != id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allFillInTheBlankId.length === 5){
+                alert("填空题为5题!");
+            }else {
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allFillInTheBlankId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(2).text("填空题 : " + allFillInTheBlankId);
+    });
+
+    // 程序阅读题 allReadProgram
+    var allReadProgramId = [];
+    $("#allReadProgram button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allReadProgramId = allReadProgramId.filter(function (item) {
+                return item !== id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allReadProgramId.length === 2){
+                alert("程序阅读题为两题!");
+            }else {
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allReadProgramId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(3).text("程序阅读题 : " + allReadProgramId);
+    });
+
+    // 程序填空题
+    var allProgramFillInTheBlankId = [];
+    $("#allProgramFillInTheBlank button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allProgramFillInTheBlankId = allProgramFillInTheBlankId.filter(function (item) {
+                return item !== id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allProgramFillInTheBlankId.length === 2){
+                alert("程序填空题为两题!");
+            }
+            else{
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allProgramFillInTheBlankId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(4).text("程序填空题 : " + allProgramFillInTheBlankId);
+    });
+
+    // 程序改错题
+    var allCorrectMistakeId = [];
+    $("#allCorrectMistake button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allCorrectMistakeId = allCorrectMistakeId.filter(function (item) {
+                return item !== id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allCorrectMistakeId.length === 1){
+                alert("程序改错题为一题!");
+            }else {
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allCorrectMistakeId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(5).text("程序改错题 : " + allCorrectMistakeId);
+    });
+
+    // 编程题
+    var allProgramingId = [];
+    $("#allPrograming button").click(function (e) {
+        var target = $(e.target);
+        id = $(e.target).attr("selectId");      // 30
+        if (target.attr("selected") === "selected"){
+            target.attr("selected", false);
+            allProgramingId = allProgramingId.filter(function (item) {
+                return item !== id;
+            });     // 删除
+            $(e.target).attr("class", "btn btn-success");
+            target.text("选择");
+        }else{
+            if (allProgramingId.length === 2){
+                alert("编程题为两题!");
+            }else {
+                target.attr("selected","selected");
+                $(e.target).attr("class", "btn btn-default");
+                target.text("已选择");
+                allProgramingId.push(id);
+            }
+        }
+        $("#selectedId > h3").eq(6).text("编程题 : " + allProgramingId);
+    });
+</script>
+</body>
+</html>

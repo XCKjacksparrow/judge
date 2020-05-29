@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+    <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+        <div>
+            <ul class="nav nav-pills nav-stacked nav-pills-stacked-example">
+                <li role="presentation"><a href="/success/admin">题库管理</a></li>
+                <li role="presentation"><a href="/teacherManage">教师管理</a></li>
+                <li role="presentation" class="active"><a href="#">学生管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content col-md-10" >
+        <button class="btn btn-default" id="add">新增</button>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Account</th>
+                <th>grade</th>
+                <th>class</th>
+                <th>name</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${allStudents}">
+                <th scope="row" th:text="${user.id}">1</th>
+                <td th:text="${user.account}">Mark</td>
+                <td th:text="${user.grade}">Otto</td>
+                <td th:text="${user.className}">@mdo</td>
+                <td th:text="${user.name}">@mdo</td>
+                <td><button th:attr="deleteId=${user.id}" class="btn btn-danger">delete</button> <button th:attr="modifyId=${user.id}" class="btn btn-success">modify</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                确定删除吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 新增学生 -->
+<div class="modal fade bs-example-modal-add" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="account">学号</label>
+                        <input type="text" id="account">
+                    </div>
+                    <div class="form-group">
+                        <label for="grade">年级</label>
+                        <input type="text" id="grade">
+                    </div>
+                    <div class="form-group">
+                        <label for="className">班级</label>
+                        <input type="text" id="className">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="addSureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改 -->
+<div class="modal fade bs-example-modal-modify" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="accountModify">学号</label>
+                        <input type="text" id="accountModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeModify">年级</label>
+                        <input type="text" id="gradeModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="classNameModify">班级</label>
+                        <input type="text" id="classNameModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="nameModify">姓名</label>
+                        <input type="text" id="nameModify">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="modifySureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var currentId;
+    // 删除
+    $("tr button.btn-danger").click(function (e) {
+        // console.log(e.target.id);
+        $(".bs-example-modal-sm").modal();
+        currentId = $(e.target).attr("deleteId");
+    });
+    $("#sureBtn").click(function () {
+        $.ajax({
+            url:"/deleteUserById",
+            data:{
+                id:currentId,
+            },
+            success:function (result) {
+                location.reload();
+            }
+        })
+    });
+
+    //新增
+    $("#add").click(function () {
+        $(".bs-example-modal-add").modal();
+    });
+    $("#addSureBtn").click(function () {
+        $.ajax({
+            url:"/addStudent",
+            method:"post",
+            data:{
+                account : $("#account").val(),
+                grade : $("#grade").val(),
+                className : $("#className").val(),
+                name : $("#name").val(),
+            },
+            success:function (result) {
+                alert(result);
+                location.reload();
+            }
+        })
+    });
+
+
+    //修改
+    $("tr button.btn-success").click(function (e) {
+        currentId = $(e.target).attr("modifyId");
+        var row = e.target.parentNode.parentNode;
+        $("#accountModify").val(row.childNodes[3].innerText);
+        $("#gradeModify").val(row.childNodes[5].innerText);
+        $("#classNameModify").val(row.childNodes[7].innerText);
+        $("#nameModify").val(row.childNodes[9].innerText);
+        $(".bs-example-modal-modify").modal();
+
+        $("#modifySureBtn").click(function () {
+            $.ajax({
+                url:"/modifyStudent",
+                method:"post",
+                data:{
+                    id:currentId,
+                    account : $("#accountModify").val(),
+                    grade : $("#gradeModify").val(),
+                    className : $("#classNameModify").val(),
+                    name : $("#nameModify").val(),
+                },
+                success:function (result) {
+                    alert(result);
+                    location.reload();
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

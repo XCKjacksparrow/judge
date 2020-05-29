@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+    <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+        <div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="#">考试管理</a></li>
+                <li role="presentation"><a href="/gradeTeacher">成绩查询</a></li>
+                <li role="presentation"><a href="/analysis">考试分析</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-10">
+        <a class="btn btn-info" href="/publish">发布考试</a>
+        <table class="table">
+            <thead>
+            <th>#</th>
+            <th>考试名称</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>发布教师</th>
+            <th>操作</th>
+            </thead>
+            <tbody>
+            <tr th:each="quiz : ${all}">
+                <td th:text="${quiz.id}">1</td>
+                <td th:text="${quiz.quizName}">1</td>
+                <td th:text="${#dates.format(quiz.startTime,'dd/MMM/yyyy HH:mm')}">1</td>
+                <td th:text="${#dates.format(quiz.endTime,'dd/MMM/yyyy HH:mm')}">1</td>
+                <td th:text="${teacherNames.get(quizStat.index)}">1</td>
+                <td>
+                    <button class="btn btn-success" th:attr="modifyId=${quiz.id}">修改</button>
+                    <button class="btn btn-danger" th:attr="deleteId=${quiz.id}">删除</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- 修改 -->
+<div class="modal fade bs-example-modal-modify" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="quizNameModify">考试名称</label>
+                        <input type="text" id="quizNameModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateModify">开始时间</label><br>
+                        <input type="date" id="dateModify" value="2020-01-01">
+                        <input type="time" id="datetimeModify" value="14:30:00">
+                        <label for="dateEndModify" style="margin-top: 10px;">结束时间</label><br>
+                        <input type="date" id="dateEndModify" value="2020-01-01">
+                        <input type="time" id="datetimeEndModify" value="14:30:00">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="modifySureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 删除 -->
+<div class="modal fade bs-example-modal-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        确认删除?
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="deleteBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var currentId;
+    //修改
+    $("tr button.btn-success").click(function (e) {
+        currentId = $(e.target).attr("modifyId");
+        var row = e.target.parentNode.parentNode;
+        $("#quizNameModify").val(row.childNodes[3].innerText);
+        // $("#dateModify").val(row.childNodes[5].innerText);
+        // $("#datetimeModify").val(row.childNodes[5].innerText);
+        $(".bs-example-modal-modify").modal();
+
+        $("#modifySureBtn").click(function () {
+            $.ajax({
+                url: "/modifyPublish",
+                method: "post",
+                data: {
+                    id: currentId,
+                    quizName: $("#quizNameModify").val(),
+                    date: $("#dateModify").val() + " " + $("#datetimeModify").val() + ":00",
+                    dateEnd: $("#dateEndModify").val() + " " + $("#datetimeEndModify").val() + ":00",
+                },
+                success: function (result) {
+                    alert(result);
+                    location.reload();
+                }
+            })
+        });
+    });
+    // 删除
+    $("tr button.btn-danger").click(function (e) {
+        currentId = $(e.target).attr("deleteId");
+        $(".bs-example-modal-delete").modal();
+    });
+    $("#deleteBtn").click(function () {
+        $.ajax({
+            url: "/deleteQuiz",
+            data: {
+                id: currentId,
+            },
+            method: "post",
+            success: function (result) {
+                alert(result);
+                location.reload();
+            }
+        })
+    });
+</script>
+</body>
+</html>

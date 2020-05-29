@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+    <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+        <div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><a href="/success/teacher">考试管理</a></li>
+                <li role="presentation"><a href="#">成绩查询</a></li>
+                <li role="presentation" class="active"><a href="#">考试分析</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-10">
+        <table class="table">
+            <thead>
+                <th>#</th>
+                <th>选择题</th>
+                <th>判断题</th>
+                <th>填空题</th>
+                <th>程序阅读题</th>
+                <th>程序填空题</th>
+                <th>程序改错题</th>
+                <th>编程题</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>得分率</td>
+                <td th:text="${SingleChoiceRate} + '%'">1</td>
+                <td th:text="${TrueOrFalseRate} + '%'">2</td>
+                <td th:text="${FillInTheBlankRate} + '%'">3</td>
+                <td th:text="${ReadProgramRate} + '%'">4</td>
+                <td th:text="${ProgramFillInTheBlankRate} + '%'">5</td>
+                <td th:text="${CorrectMistakeRate} + '%'">6</td>
+                <td th:text="${ProgramRate} + '%'">7</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3 th:text="考试人数 + ' : ' + ${N}"></h3>
+        <h3 th:text="最高分 + ' : ' + ${max}"></h3>
+        <h3 th:text="最低分 + ' : ' + ${min}"></h3>
+        <h3 th:text="不及格人数 + ' : ' + ${underN}"></h3>
+        <h3 th:text="及格率 + ' : ' + ${upRate} + '%'"></h3>
+    </div>
+</div>
+
+</body>
+</html>

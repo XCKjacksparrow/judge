@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="headname"><nav class="navbar navbar-default">
+    <div class="container-fliud">
+        <div class="navbar-header">
+            <a href="#" class="navbar-brand">HYIT-OnlineJudge</a>
+        </div>
+        <div class="nav navbar-nav navbar-right" style="margin-right: 20px;">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="USERNAME">Options <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/">退出</a></li>
+                    <li><a href="#" onclick="$('.bs-example-modal-changePassword').modal()">修改密码</a></li>
+                </ul>
+            </li>
+        </div>
+    </div>
+</nav>
+
+    <div class="modal fade bs-example-modal-changePassword" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <label for="oldPass">请输入旧密码 : </label>
+                    <input type="password" id="oldPass">
+                    <label for="newPass">请输入新密码 : </label>
+                    <input type="password" id="newPass"> <br>
+                    <label for="newPass2">确认新密码 : </label> <br>
+                    <input type="password" id="newPass2">
+                </div>
+                <div class="modal-footer">
+                    <h4>确认提交吗?</h4>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="changePasswordsureBtn" type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function(){
+            // window.location.href = 'http://localhost:8080';
+            $.ajax({
+               url:"/islogin",
+               method:"get",
+               success:function (result) {
+                    if (result === "no"){
+                        window.location.href = 'http://localhost:8080'
+                    }else {
+                        $("#USERNAME").text(result);
+                    }
+               }
+            });
+        };
+        $("#changePasswordsureBtn").click(function () {
+            // alert("clicked");
+            var oldPass = $("#oldPass").val();
+            var newPass = $("#newPass").val();
+            var newPass2 = $("#newPass2").val();
+            if (newPass !== newPass2){
+                alert("两次密码不一致！");
+            }else {
+                $.ajax({
+                    url:"/userChangePassword",
+                    data:{
+                        oldPass:oldPass,
+                        newPass:newPass,
+                    },
+                    success:function (result) {
+                        alert(result);
+                        location.reload();
+                    }
+                })
+            }
+        });
+    </script>
+</div>
+
+</body>
+</html>

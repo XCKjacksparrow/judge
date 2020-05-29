@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="asserts/css/main.css">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+
+
+<div class="top-banner">
+    <img src="asserts/img/logo2.png" style="height: 86px; margin-left: 100px;">
+    <div style="display: inline-block;font-size: 3rem;font-weight: bold;margin-left: 120px;color: white;vertical-align: middle">淮阴工学院多核编程考试系统(HYIT-OnlineJudge)</div>
+</div>
+
+<div class="title-line">
+    <span class="tit" style="font-size: 38px;">Login</span>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <img src="/asserts/img/scene.jpg" class="leftImg img-rounded">
+        </div>
+
+        <div class="col-md-2" style="padding-right: 100px; margin-top: 50px">
+            <div class="line"></div>
+        </div>
+
+        <div class="col-md-5">
+            <form class="loginForm form-horizontal" action="#" method="post">
+                <div class="form-group">
+                    <label for="inputAccount" class="col-sm-2 control-label">Account</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="account" class="form-control" id="inputAccount" placeholder="Account">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+                    </div>
+                </div>
+                <span id="errorMSG" style="color: red"></span>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Remember me
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-3">
+                        <button id="submitBtn" type="button" class="btn btn-default">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer>
+
+</footer>
+
+
+
+    <script>
+        $(window).keydown(function (event) {
+            if(event.keyCode===13){
+                $("#submitBtn").click();
+            }
+        });
+
+        $("#submitBtn").click(function () {
+            if ($("#inputAccount").val().trim() === ""){
+                $("#errorMSG").text("Account cannot be empty");
+            }
+            else if ($("#inputPassword").val().trim() === ""){
+                $("#errorMSG").text("Password cannot be empty");
+            }else {
+                $.ajax({
+                    url:"/login",
+                    data:{
+                        account:$("#inputAccount").val(),
+                        password:$("#inputPassword").val(),
+                    },
+                    success:function (result) {
+                        var type = result.type;
+                        if (type === "student" || type === "teacher" || type === "admin")
+                            window.location.href="/success/" + type + "?user = ";
+                        else
+                            $("#errorMSG").text(result);
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+</html>

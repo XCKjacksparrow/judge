@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+        <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+            <div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="#">题库管理</a></li>
+                    <li role="presentation"><a href="/teacherManage">教师管理</a></li>
+                    <li role="presentation"><a href="/studentManage">学生管理</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content col-md-10">
+            <div class="row">
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="active"><a href="#">选择题</a></li>
+                            <li role="presentation"><a href="/questionManageTrueOrFalse">判断题</a></li>
+                            <li role="presentation"><a href="/questionManageFillInTheBlank">填空题</a></li>
+                            <li role="presentation"><a href="/questionManageReadProgram">程序阅读题</a></li>
+                            <li role="presentation"><a href="/questionManageProgramFillInTheBlank">程序填空题</a></li>
+                            <li role="presentation"><a href="/questionManageCorrectMistake">程序改错题</a></li>
+                            <li role="presentation"><a href="/questionManagePrograming">程序编写题</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-10" style="margin-top: 20px;">
+                    <button class="btn btn-default" id="add">新增</button>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>内容</th>
+                            <th>答案</th>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>选项</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="question : ${allSingleChoice}">
+                            <th scope="row" th:text="${question.id}">1</th>
+                            <td th:utext="${question.content}" th:size="5">Mark</td>
+                            <td th:text="${question.answer}">Otto</td>
+                            <td th:text="${question.getChoice_a()}">@mdo</td>
+                            <td th:text="${question.getChoice_b()}">@mdo</td>
+                            <td th:text="${question.getChoice_c()}">@mdo</td>
+                            <td th:text="${question.getChoice_d()}">@mdo</td>
+                            <td><button th:attr="deleteId=${question.id}" class="btn btn-danger btn-sm">delete</button> <button th:attr="modifyId=${question.id}" class="btn btn-success btn-sm">modify</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+<!-- 删除 -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                确定删除吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增 -->
+<div class="modal fade bs-example-modal-add" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirong">内容</label>
+                        <textArea id="neirong" style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="daan">答案</label>
+                        <input type="text" id="daan">
+                    </div>
+                    <div class="form-group">
+                        <label for="Aanswer">A</label>
+                        <input type="text" id="Aanswer">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Banswer">B</label>
+                        <input type="text" id="Banswer">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Canswer">C</label>
+                        <input type="text" id="Canswer">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Danswer">D</label>
+                        <input type="text" id="Danswer">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="addSureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改 -->
+
+<div class="modal fade bs-example-modal-modify" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirongModify">内容</label>
+                        <textArea id="neirongModify" style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="daanModify">答案</label>
+                        <input type="text" id="daanModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="AanswerModify">A</label>
+                        <input type="text" id="AanswerModify">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="BanswerModify">B</label>
+                        <input type="text" id="BanswerModify">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CanswerModify">C</label>
+                        <input type="text" id="CanswerModify">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="DanswerModify">D</label>
+                        <input type="text" id="DanswerModify">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="modifySureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var currentId;
+    // 删除
+    $("tr button.btn-danger").click(function (e) {
+        // console.log(e.target.id);
+        $(".bs-example-modal-sm").modal();
+        currentId = $(e.target).attr("deleteId");
+    });
+    $("#sureBtn").click(function () {
+        $.ajax({
+            url:"/deleteQuestionById",
+            data:{
+                id:currentId,
+            },
+            success:function (result) {
+                location.reload();
+            }
+        })
+    });
+    //    新增
+    $("#add").click(function () {
+        $(".bs-example-modal-add").modal();
+    });
+    $("#addSureBtn").click(function () {
+
+        $.ajax({
+            url:"/addSingleChoice",
+            method:"post",
+            data:{
+                neirong : $("#neirong").val(),
+                daan : $("#daan").val(),
+                Aanswer : $("#Aanswer").val(),
+                Banswer : $("#Banswer").val(),
+                Canswer : $("#Canswer").val(),
+                Danswer : $("#Danswer").val(),
+            },
+            success:function (result) {
+                alert("添加成功");
+                location.reload();
+            }
+        })
+    });
+
+    //修改
+    $("tr button.btn-success").click(function (e) {
+        currentId = $(e.target).attr("modifyId");
+        var row = e.target.parentNode.parentNode;
+        $("#neirongModify").val(row.childNodes[3].innerText);
+        $("#daanModify").val(row.childNodes[5].innerText);
+        $("#AanswerModify").val(row.childNodes[7].innerText);
+        $("#BanswerModify").val(row.childNodes[9].innerText);
+        $("#CanswerModify").val(row.childNodes[11].innerText);
+        $("#DanswerModify").val(row.childNodes[13].innerText);
+        $(".bs-example-modal-modify").modal();
+        $("#modifySureBtn").click(function () {
+            $.ajax({
+                url:"/modifySingleChoice",
+                method: "post",
+                data:{
+                    id : currentId,
+                    neirong : $("#neirongModify").val(),
+                    daan : $("#daanModify").val(),
+                    Aanswer : $("#AanswerModify").val(),
+                    Banswer : $("#BanswerModify").val(),
+                    Canswer : $("#CanswerModify").val(),
+                    Danswer : $("#DanswerModify").val()
+                },
+                success:function (result) {
+                    alert(result);
+                    location.reload();
+                }
+            })
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+    <link rel="stylesheet" th:href="@{/asserts/css/default.css}">
+    <script src="https://cdn.bootcss.com/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div th:include="head :: headname"></div>
+
+    <div class="container-fliud" style="margin:0;">
+        <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+            <div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="#">考试作答</a></li>
+                    <li role="presentation"><a href="#">成绩查询</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div class="container">
+<!--                选择题-->
+                <div class="singleChoice">
+                    <h3>选择题</h3>
+                    <div th:each="question, questionStatus : ${allSingleChoice}" th:name="${question.id}">
+                        <div th:utext="${questionStatus.index + 1}+'. '+${question.content}" style="width: 800px;"></div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="SingleChoice + ${questionStatus.index}" name="optionsRadios" value="A" th:text="${question.getChoice_a()}">
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="SingleChoice + ${questionStatus.index}" name="optionsRadios" value="B" th:text="${question.getChoice_b()}">
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="SingleChoice + ${questionStatus.index}" name="optionsRadios" value="C" th:text="${question.getChoice_c()}">
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="SingleChoice + ${questionStatus.index}"name="optionsRadios" value="D" th:if="${question.getChoice_d()} != ''" th:text="${question.getChoice_d()}">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+<!--                判断题-->
+                <div class="allTrueOrFalse">
+                    <h3>判断题</h3>
+                    <div th:each="question,questionStatus : ${allTrueOrFalse}">
+                        <div th:utext="${questionStatus.index + 1 + 5}+'. '+${question.content}" style="width: 800px;"></div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="TrueOrFalse + ${questionStatus.index}" name="optionsRadios" value="T" th:text="T">
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" th:name="TrueOrFalse + ${questionStatus.index}" name="optionsRadios" value="F" th:text="F">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+<!--                填空题-->
+                <div class="allFillInTheBlank">
+                    <h3>填空题</h3>
+                    <div th:each="question,questionStatus : ${allFillInTheBlank}" style="margin-bottom: 10px;">
+                        <div th:utext="${questionStatus.index + 1 + 10}+'. '+${question.content}" style="width: 800px;"></div>
+                        <input th:name="FillInTheBlank + ${questionStatus.index}" type="text" style="border-top: 0; border-right: 0; border-left: 0; border-bottom: 1px solid black;">
+                    </div>
+                </div>
+<!--                程序阅读题-->
+                <div class="allReadProgram">
+                    <h3>程序阅读题</h3>
+                    <div th:each="question,questionStatus : ${allReadProgram}">
+                        <div th:utext="${questionStatus.index + 1 + 15}+'. '+${question.content}" style="width: 800px;"></div>
+                        <input th:name="ReadProgram + ${questionStatus.index}" type="text" style="border-top: 0; border-right: 0; border-left: 0; border-bottom: 1px solid black;">
+                    </div>
+                </div>
+<!--                程序填空题-->
+                <div class="allProgramFillInTheBlank">
+                    <h3>程序填空题</h3>
+                    <div th:each="question,questionStatus : ${allProgramFillInTheBlank}"  style="margin-bottom: 10px;">
+                        <div th:utext="${questionStatus.index + 1 + 17}+'. '+${question.content}" style="width: 800px;"></div>
+                        <input th:name="ProgramFillInTheBlank + ${questionStatus.index}" type="text" style="border-top: 0; border-right: 0; border-left: 0; border-bottom: 1px solid black;">
+                    </div>
+                </div>
+<!--                改错题-->
+                <div class="allCorrectMistake">
+                    <h3>程序改错题</h3>
+                    <div th:each="question,questionStatus : ${allCorrectMistake}"  style="margin-bottom: 10px;">
+                        <div th:utext="${questionStatus.index + 1 + 19}+'. '+${question.content}" style="width: 800px;"></div>
+                        <pre style="width: 800px;">
+                            <code class="hljs java" style="width: 800px;" th:utext="${question.answer}">
+
+                            </code>
+                        </pre>
+                        <textarea onkeydown="tab(this)" th:name="CorrectMistake + ${questionStatus.index}" class="form-control" rows="10" style="margin-top: 10px; width: 800px;"></textarea>
+                        <pre style="width: 800px;">
+                            <code th:name="java2" class="hljs java" style="width: 800px;" th:utext="${question.answer}">
+
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+<!--                编程题-->
+                <div class="allPrograming">
+                    <h3>编程题</h3>
+                    <div th:each="question,questionStatus : ${allPrograming}">
+                        <div th:utext="${questionStatus.index + 1 + 20}+'. '+${question.content}" style="width: 800px"></div>
+                        <img th:src="${question.getQuestionImg()}" style="width: 800px;" alt="">
+                        <select class="form-control" style="width: 150px;">
+                            <option>java</option>
+                            <option>c</option>
+                            <option>python</option>
+                        </select>
+                        <textarea onkeydown="tab(this)" th:name="Programing + ${questionStatus.index}" class="form-control" rows="10" style="margin-top: 10px; width: 800px;"></textarea>
+                        <pre style="width: 800px;">
+                            <code th:name="java + ${questionStatus.index}" class="hljs java" style="width: 800px;">
+
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+                <hr />
+                <button class="btn btn-success" id="submitBtn">提交</button>
+            </div>
+        </div>
+    </div>
+
+    <div th:id="${quizId}" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    确定提交吗?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        // 控制tab键
+        function tab(obj){
+            if (event.keyCode === 9)
+            {
+                obj.value = obj.value + "  "; // 跳几格由你自已决定
+                event.returnValue = false;
+            }
+        }
+        // 实时刷新
+        $("[name=Programing0]").keyup(function () {
+            var highCode = hljs.highlightAuto($("[name=Programing0]").val()).value;
+            $("[name=java0]").html(highCode);
+        });
+        $("[name=Programing1]").keyup(function () {
+            var highCode = hljs.highlightAuto($("[name=Programing1]").val()).value;
+            $("[name=java1]").html(highCode);
+        });
+        $("[name=CorrectMistake0]").keyup(function () {
+            var highCode = hljs.highlightAuto($("[name=CorrectMistake0]").val()).value;
+            $("[name=java2]").html(highCode);
+        });
+
+
+        var singleChoiceAnswer = [];
+        var trueOrFalseAnswer = [];
+        var fillInTheBlankAnswer = [];
+        var readProgramAnswer = [];
+        var programFillInTheBlankAnswer = [];
+        var correctMistakeAnswer = [];
+        var programingAnswer = [];
+
+        function clearAllAnswer(){
+            singleChoiceAnswer = [];
+            trueOrFalseAnswer = [];
+            fillInTheBlankAnswer = [];
+            readProgramAnswer = [];
+            programFillInTheBlankAnswer = [];
+            programingAnswer = [];
+        }
+
+        $("#submitBtn").click(function () {
+            // 选择题
+            if (
+                $("input:radio[name='SingleChoice0']:checked").val() === undefined ||
+                $("input:radio[name='SingleChoice1']:checked").val() === undefined ||
+                $("input:radio[name='SingleChoice2']:checked").val() === undefined ||
+                $("input:radio[name='SingleChoice3']:checked").val() === undefined ||
+                $("input:radio[name='SingleChoice4']:checked").val() === undefined
+            ){
+                alert("选择题未选完！");clearAllAnswer(); return;
+            }else{
+                singleChoiceAnswer.push($("input:radio[name='SingleChoice0']:checked").val());
+                singleChoiceAnswer.push($("input:radio[name='SingleChoice1']:checked").val());
+                singleChoiceAnswer.push($("input:radio[name='SingleChoice2']:checked").val());
+                singleChoiceAnswer.push($("input:radio[name='SingleChoice3']:checked").val());
+                singleChoiceAnswer.push($("input:radio[name='SingleChoice4']:checked").val());
+            }
+            if (
+                $("input:radio[name='TrueOrFalse0']:checked").val() === undefined ||
+                $("input:radio[name='TrueOrFalse1']:checked").val() === undefined ||
+                $("input:radio[name='TrueOrFalse2']:checked").val() === undefined ||
+                $("input:radio[name='TrueOrFalse3']:checked").val() === undefined ||
+                $("input:radio[name='TrueOrFalse4']:checked").val() === undefined
+            ){
+                alert("判断题未选完！");clearAllAnswer(); return;
+            }else {
+                trueOrFalseAnswer.push($("input:radio[name='TrueOrFalse0']:checked").val());
+                trueOrFalseAnswer.push($("input:radio[name='TrueOrFalse1']:checked").val());
+                trueOrFalseAnswer.push($("input:radio[name='TrueOrFalse2']:checked").val());
+                trueOrFalseAnswer.push($("input:radio[name='TrueOrFalse3']:checked").val());
+                trueOrFalseAnswer.push($("input:radio[name='TrueOrFalse4']:checked").val());
+            }
+
+            if (
+                $("[name=FillInTheBlank0]").val() === "" ||
+                $("[name=FillInTheBlank1]").val() === "" ||
+                $("[name=FillInTheBlank2]").val() === "" ||
+                $("[name=FillInTheBlank3]").val() === "" ||
+                $("[name=FillInTheBlank4]").val() === ""
+            ){
+                alert("填空题未完成！");clearAllAnswer(); return;
+            }else {
+                fillInTheBlankAnswer.push( $("[name=FillInTheBlank0]").val());
+                fillInTheBlankAnswer.push( $("[name=FillInTheBlank1]").val());
+                fillInTheBlankAnswer.push( $("[name=FillInTheBlank2]").val());
+                fillInTheBlankAnswer.push( $("[name=FillInTheBlank3]").val());
+                fillInTheBlankAnswer.push( $("[name=FillInTheBlank4]").val());
+            }
+            if (
+                $("[name=ReadProgram0]").val() === "" ||
+                $("[name=ReadProgram1]").val() === ""
+            ){
+                alert("程序阅读题未完成！");clearAllAnswer(); return;
+            }else {
+                readProgramAnswer.push($("[name=ReadProgram0]").val());
+                readProgramAnswer.push($("[name=ReadProgram1]").val());
+            }
+            if (
+                $("[name=ProgramFillInTheBlank0]").val() === "" ||
+                $("[name=ProgramFillInTheBlank1]").val() === ""
+            ){
+                alert("程序填空题未完成！");clearAllAnswer(); return;
+            }else {
+                programFillInTheBlankAnswer.push($("[name=ProgramFillInTheBlank0]").val());
+                programFillInTheBlankAnswer.push($("[name=ProgramFillInTheBlank1]").val());
+            }
+            if (
+                $("[name=CorrectMistake0]").val() == ""
+            ){
+                alert("程序改错题未完成!");clearAllAnswer(); return;
+            }else{
+                correctMistakeAnswer.push($("[name=CorrectMistake0]").val());
+            }
+            if (
+                $("[name=Programing0]").val() === "" ||
+                $("[name=Programing1]").val() === ""
+            ){
+                alert("编程题未完成！");clearAllAnswer(); return;
+            }else {
+                programingAnswer.push($("[name=Programing0]").val());
+                programingAnswer.push($("[name=Programing1]").val());
+            }
+            $(".bs-example-modal-sm").modal();
+        });
+
+        $("#sureBtn").click(function () {
+            var studentName = $(".dropdown-toggle").text();
+            var quizId = $(".bs-example-modal-sm").attr("id");
+            $.ajax({
+               url:"/submitQuiz",
+               data:{
+                   studentName:studentName,
+                   quizId : quizId,
+                   singleChoiceAnswer : singleChoiceAnswer.toString(),
+                   trueOrFalseAnswer : trueOrFalseAnswer.toString(),
+                   fillInTheBlankAnswer : fillInTheBlankAnswer.toString(),
+                   readProgramAnswer : readProgramAnswer.toString(),
+                   programFillInTheBlankAnswer : programFillInTheBlankAnswer.toString(),
+                   correctMistakeAnswer : correctMistakeAnswer.toString(),
+                   programingAnswer : programingAnswer.toString()
+               },
+                success:function (result) {
+                    alert("提交成功");
+                    location.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

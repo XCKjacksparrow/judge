@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HYIT-OnlineJudge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:include="head :: headname"></div>
+
+<div class="container-fliud" style="margin:0;">
+        <div class="sidebar col-md-2" style="border-right: 1px solid gray;">
+            <div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="#">题库管理</a></li>
+                    <li role="presentation"><a href="/teacherManage">教师管理</a></li>
+                    <li role="presentation"><a href="/studentManage">学生管理</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content col-md-10">
+            <div class="row">
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation"><a href="/success/admin">选择题</a></li>
+                            <li role="presentation"><a href="/questionManageTrueOrFalse">判断题</a></li>
+                            <li role="presentation"><a href="/questionManageFillInTheBlank">填空题</a></li>
+                            <li role="presentation"><a href="/questionManageReadProgram">程序阅读题</a></li>
+                            <li role="presentation"><a href="/questionManageProgramFillInTheBlank">程序填空题</a></li>
+                            <li role="presentation"><a href="/questionManageCorrectMistake">程序改错题</a></li>
+                            <li role="presentation" class="active"><a href="#">程序编写题</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-10" style="margin-top: 20px;">
+                    <button class="btn btn-default" id="add">新增</button>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>内容</th>
+                            <th>图片</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="question : ${allPrograming}">
+                            <th scope="row" th:text="${question.id}">1</th>
+                            <td th:utext="${question.content}" th:size="5">Mark</td>
+                            <td><img th:src="${question.questionImg}" alt="" style="width:400px"></td>
+                            <td><button th:attr="deleteId=${question.id}" class="btn btn-danger btn-sm">delete</button>  <button th:attr="modifyId=${question.id}" class="btn btn-success btn-sm">modify</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+<!-- 删除 -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                确定删除吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="sureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增 -->
+<div class="modal fade bs-example-modal-add" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirong">内容</label>
+                        <textArea id="neirong"  style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imgAdd">图片地址</label>
+                        <input type="text" id="imgAdd">
+                    </div>
+                    <div class="form-group">
+                        <label for="input1">输入一</label>
+                        <input type="text" id="input1" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output1">输出一</label>
+                        <input type="text" id="output1" placeholder="49">
+                    </div>
+                    <div class="form-group">
+                        <label for="input2">输入二</label>
+                        <input type="text" id="input2" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output2">输出二</label>
+                        <input type="text" id="output2" placeholder="49">
+                    </div>
+                    <div class="form-group">
+                        <label for="input3">输入三</label>
+                        <input type="text" id="input3" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output3">输出三</label>
+                        <input type="text" id="output3" placeholder="49">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="addSureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改 -->
+
+<div class="modal fade bs-example-modal-modify" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="neirongModify">内容</label>
+                        <textArea id="neirongModify" style="width: 800px;" rows="6"></textArea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imgAddModify">图片地址</label>
+                        <input type="text" id="imgAddModify">
+                    </div>
+                    <div class="form-group">
+                        <label for="input1Modify">输入一</label>
+                        <input type="text" id="input1Modify" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output1Modify">输出一</label>
+                        <input type="text" id="output1Modify" placeholder="49">
+                    </div>
+                    <div class="form-group">
+                        <label for="input2Modify">输入二</label>
+                        <input type="text" id="input2Modify" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output2Modify">输出二</label>
+                        <input type="text" id="output2Modify" placeholder="49">
+                    </div>
+                    <div class="form-group">
+                        <label for="input3Modify">输入三</label>
+                        <input type="text" id="input3Modify" placeholder="[1,8,6,2,5,4,8,3,7]">
+                    </div>
+                    <div class="form-group">
+                        <label for="output3Modify">输出三</label>
+                        <input type="text" id="output3Modify" placeholder="49">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="modifySureBtn" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var currentId;
+    //删除
+    $("tr button.btn-danger").click(function (e) {
+        // console.log(e.target.id);
+        $(".bs-example-modal-sm").modal();
+        currentId = $(e.target).attr("deleteId");
+    });
+    $("#sureBtn").click(function () {
+        $.ajax({
+            url:"/deleteQuestionById",
+            data:{
+                id:currentId,
+            },
+            success:function (result) {
+                location.reload();
+            }
+        })
+    });
+    //    新增
+    $("#add").click(function () {
+        $(".bs-example-modal-add").modal();
+    });
+    $("#addSureBtn").click(function () {
+        $.ajax({
+            url:"/addPrograming",
+            method:"post",
+            data:{
+                neirong : $("#neirong").val(),
+                imgAdd : $("#imgAdd").val(),
+                input1 : $("#input1").val(),
+                input2 : $("#input2").val(),
+                input3 : $("#input3").val(),
+                output1 : $("#output1").val(),
+                output2 : $("#output2").val(),
+                output3 : $("#output3").val(),
+            },
+            success:function (result) {
+                alert("添加成功");
+                location.reload();
+            }
+        })
+    });
+
+    //修改
+    $("tr button.btn-success").click(function (e) {
+        currentId = $(e.target).attr("modifyId");
+        var row = e.target.parentNode.parentNode;
+        $("#neirongModify").val(row.childNodes[3].innerText);
+        $("#imgAddModify").val(row.childNodes[5].childNodes[0].src);
+        $(".bs-example-modal-modify").modal();
+        $("#modifySureBtn").click(function () {
+            $.ajax({
+                url:"/modifyPrograming",
+                method: "post",
+                data:{
+                    id : currentId,
+                    imgAdd : $("#imgAddModify").val(),
+                    input1 : $("#input1Modify").val(),
+                    input2 : $("#input2Modify").val(),
+                    input3 : $("#input3Modify").val(),
+                    output1 : $("#output1Modify").val(),
+                    output2 : $("#output2Modify").val(),
+                    output3 : $("#output3Modify").val(),
+                },
+                success:function (result) {
+                    alert(result);
+                    location.reload();
+                }
+            })
+        });
+    });
+
+</script>
+</body>
+</html>
